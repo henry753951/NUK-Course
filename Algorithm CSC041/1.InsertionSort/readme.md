@@ -3,7 +3,8 @@
 ## 1. 介紹
 
 插入排序法（Insertion Sort）是一種簡單直觀的排序演算法。它的工作原理是通過構建有序序列，對於未排序資料，在已排序序列中從後向前掃描，找到相應位置並插入。  
-![動畫](Assets/image.png)
+![92b034385c440e08bc8551c97df0a2e3](https://github.com/henry753951/NUK-Course/assets/31657781/c464f5ff-d7bc-443c-9d50-8fc607994c1a)
+
 
 ## 2. 步驟
 
