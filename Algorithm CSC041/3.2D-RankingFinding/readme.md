@@ -25,6 +25,7 @@ After sorting: 0 0 1 0 2 2 0 5 6 8 1 3 9 3 4 1 7
 ```
 
 ## 5. Analysis
+![lagrida_latex_editor (2)](https://github.com/henry753951/NUK-Course/assets/31657781/753826ca-ac59-48ce-829b-90ad28b6b613)
 
 
 **LaTex在註解裡面**
