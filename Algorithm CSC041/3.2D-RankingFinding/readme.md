@@ -14,6 +14,44 @@
 ## 3. 程式碼
 
 ```cpp
+    void Ranking(int lower, int upper) {
+        if (upper - lower <= 1)
+            return;
+        int middle = (lower + upper) / 2;
+        Ranking(lower, middle);
+        Ranking(middle, upper);
+        merge(lower, middle, upper);
+    }
+
+    void merge(int left, int mid, int right) {
+        int leftIndex, rightIndex, k;
+        int counts = 0;
+        for (leftIndex = left, rightIndex = mid, k = left; leftIndex < mid && rightIndex < right; ++k) {
+            if (points[leftIndex].y < points[rightIndex].y) {
+                buffer[k] = points[leftIndex];
+                ++counts;
+                ++leftIndex;
+            } else if (points[leftIndex].y >= points[rightIndex].y)  {
+                buffer[k] = points[rightIndex];
+                buffer[k].rank += counts;
+                ++rightIndex;
+            }
+        }
+
+        for (; leftIndex < mid; ++leftIndex, ++k) {
+            buffer[k] = points[leftIndex];
+        }
+
+        for (; rightIndex < right; ++rightIndex, ++k) {
+            buffer[k] = points[rightIndex];
+            buffer[k].rank += counts;
+        }
+
+        // cp buffer to points
+        for (int i = left; i < right; ++i) {
+            points[i] = buffer[i];
+        }
+    };
 
 ```
 
