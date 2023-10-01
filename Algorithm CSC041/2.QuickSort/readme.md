@@ -1,4 +1,4 @@
-# Qucik Sort
+# Qucik Sort A1105534 張宏宇
 
 ## 1. 介紹
 

@@ -56,24 +56,33 @@ class PointContainer {
     void merge(int left, int mid, int right) {
         int leftIndex, rightIndex, k;
         int counts = 0;
-        for (leftIndex = left, rightIndex = mid, k = left; leftIndex < mid && rightIndex < right; ++k) {
+        for (leftIndex = left, rightIndex = mid, k = left; leftIndex < mid && rightIndex < right; k++) {
             if (points[leftIndex].y < points[rightIndex].y) {
                 buffer[k] = points[leftIndex];
+                // 計算左邊有幾個y小於 points[rightIndex].y
+                // ppt上的 middle 右側由y值決定 的值
                 ++counts;
                 ++leftIndex;
-            } else if (points[leftIndex].y >= points[rightIndex].y)  {
+            } else if (points[rightIndex].y <= points[leftIndex].y) {
+                // 當換右變選中元素比較小時，那就把他排進buffer
+                // 也就是說 buffer裡排比他前面的 都是y比他小的元素 += rank
                 buffer[k] = points[rightIndex];
                 buffer[k].rank += counts;
                 ++rightIndex;
             }
         }
+        // buffer 會是每一輪由y去從小排到大的結果
 
+
+        // 下面兩個for 是當某一個子範圍的元素已經全部放入 buffer 但另一個子範圍還有剩
         for (; leftIndex < mid; ++leftIndex, ++k) {
             buffer[k] = points[leftIndex];
         }
 
         for (; rightIndex < right; ++rightIndex, ++k) {
             buffer[k] = points[rightIndex];
+            // 這邊要 count++ 是因為右子範圍的元素 points[rightIndex] 被放入 buffer 前
+            // 已經有 counts 個buffer內的元素的 y 值小於它
             buffer[k].rank += counts;
         }
 
@@ -98,10 +107,15 @@ int main() {
     if (container.size() <= 0) throw "No points inputted";
     container.initBuffer();
     sort(container.points.begin(), container.points.end());
+
+    for (point p : container.points) {
+        cout << p.to_string() << " ";
+    }
+    cout << endl;
     container.Ranking(0, container.size());
 
     sort(container.points.begin(), container.points.end(), [](point a, point b) { return a.index <= b.index; });
-    for (point p : container.points) 
+    for (point p : container.points)
         cout << p.rank << " ";
     cout << endl;
 
