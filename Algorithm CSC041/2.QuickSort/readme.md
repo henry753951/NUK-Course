@@ -63,6 +63,8 @@ $\frac{T(n)}{n}=c(H_n-1)+cH_{n-1}$
 $T(n)=c(2H_n-\frac{1}{n}-1)$  
 $T(n)=2cnH_n$-c(n+1)$  
 $T(n)=O(nlogn)$   
+
+**LaTex在註解裡面**
 <!-- 
 \begin{aligned}
 T(n) &= \frac{1}{n} \sum_{s=1}^{n} (T(s) + T(n-s)) + cn \\
