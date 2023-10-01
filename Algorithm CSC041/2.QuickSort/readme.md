@@ -57,5 +57,24 @@ After sorting: 0 2 3 5 8 9 19 23 27 29
 #### Average case | **O(nlogn)**
 s 是基準元素將序列分成大小為 s 和 n-s 的兩個子序列
 $T(n)$ 表示對 n 個元素進行快速排序的平均時間複雜度
+![lagrida_latex_editor](https://github.com/henry753951/NUK-Course/assets/31657781/2d15929d-8bf2-4702-9f72-4a9b7327301f)
 
+<!-- 
+$$\begin{aligned}
+T(n) &= \frac{1}{n} \sum_{s=1}^{n} (T(s) + T(n-s)) + cn \\
+&= \frac{1}{n} (T(1)+T(n-1)+T(n-2)+....+T(n)+T(0)) + cn \\
+&= \frac{1}{n} \left(\sum_{s=1}^{n-1} T(s) + T(n) + T(0)\right) + cn \\
+nT(n) &= \sum_{s=1}^{n-1} T(s) + T(n) + T(0) + cn^2 \\
+(n-1)T(n) &= \sum_{s=1}^{n-2} T(s) + T(n-1) + T(0) + c(n-1)^2 \\
+nT(n) - (n-1)T(n) &= \left(\sum_{s=1}^{n-1} T(s) + T(n) + T(0) + cn^2 \right) - \left(\sum_{s=1}^{n-2} T(s) + T(n-1) + T(0) + c(n-1)^2\right) \\
+T(n) &= 2T(n-1) + c(n^2 - (n-1)^2) \\
+&= 2T(n-1) + c(2n-1) \\
+
+\frac{T(n)}{n} &= c\left(\frac{1}{n}+\frac{1}{n-1}+\ldots+\frac{1}{2}\right)+c\left(\frac{1}{n-1}+\frac{1}{n-2}+\ldots+1\right) \\
+&= c\left(\frac{1}{n}+\frac{1}{n-1}+\ldots+\frac{1}{2}\right)+c\left(\frac{1}{n-1}+\frac{1}{n-2}+\ldots+1\right)+T(1) \\
+&= c\left(\frac{1}{n}+\frac{1}{n-1}+\ldots+\frac{1}{2}\right)+c\left(\frac{1}{n-1}+\frac{1}{n-2}+\ldots+1\right)+T(1) \\
+&= c\left(\sum_{k=2}^{n}\frac{1}{k}\right)+c\left(\sum_{k=1}^{n-1}\frac{1}{k}\right)+T(1) \\
+&= c(H_n-1)+cH_{n-1}+T(1)
+
+\end{aligned}$$ -->
 
