@@ -30,6 +30,7 @@ class point {
 class PointContainer {
    public:
     vector<point> points;
+    point *buffer;
     void add(point p) {
         points.push_back(p);
     }
@@ -38,6 +39,9 @@ class PointContainer {
     }
     int size() {
         return points.size();
+    }
+    void initBuffer() {
+        buffer = new point[points.size()];
     }
 
     void Ranking(int lower, int upper) {
@@ -48,11 +52,34 @@ class PointContainer {
         Ranking(middle, upper);
         merge(lower, middle, upper);
     }
+
     void merge(int left, int mid, int right) {
-        int leftIndex = left, rightIndex = mid + 1;
-        int top = 0, d = 0, i;
-        while(leftIndex <= mid && rightIndex <= right ){
-            if(points[leftIndex].y < points[rightIndex].y){}
+        int leftIndex, rightIndex, k;
+        int counts = 0;
+        for (leftIndex = left, rightIndex = mid, k = left; leftIndex < mid && rightIndex < right; ++k) {
+            if (points[leftIndex].y < points[rightIndex].y) {
+                buffer[k] = points[leftIndex];
+                ++counts;
+                ++leftIndex;
+            } else if (points[leftIndex].y >= points[rightIndex].y)  {
+                buffer[k] = points[rightIndex];
+                buffer[k].rank += counts;
+                ++rightIndex;
+            }
+        }
+
+        for (; leftIndex < mid; ++leftIndex, ++k) {
+            buffer[k] = points[leftIndex];
+        }
+
+        for (; rightIndex < right; ++rightIndex, ++k) {
+            buffer[k] = points[rightIndex];
+            buffer[k].rank += counts;
+        }
+
+        // cp buffer to points
+        for (int i = left; i < right; ++i) {
+            points[i] = buffer[i];
         }
     };
 };
@@ -69,15 +96,14 @@ int main() {
         input = input.substr(input.find(")") + 2);
     }
     if (container.size() <= 0) throw "No points inputted";
-
-    // Find middle line for x
+    container.initBuffer();
     sort(container.points.begin(), container.points.end());
     container.Ranking(0, container.size());
 
     sort(container.points.begin(), container.points.end(), [](point a, point b) { return a.index <= b.index; });
-    for (point p : container.points) {
-        cout << p.to_string() + ":" + to_string(p.rank) << endl;
-    }
+    for (point p : container.points) 
+        cout << p.rank << " ";
+    cout << endl;
 
     return 0;
 }
