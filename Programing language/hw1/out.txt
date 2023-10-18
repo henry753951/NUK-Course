@@ -65,6 +65,10 @@ input:
 Trying:
         <expr> - <term>  | <id>
 input:
+        B-C/A
+Trying:
+        <expr> - <term>  | <id>
+input:
         B
 Trying:
         <expr> - <term>  | <id>
@@ -74,7 +78,7 @@ Trying:
         A  | B  | C  | D
 ncnc!
 input:
-        C/A-A
+        C/A
 Trying:
         <term> * <factor>  | <term> / <factor>  | <factor>
 input:
@@ -84,26 +88,34 @@ Trying:
 input:
         C
 Trying:
-        ( <expr> )  | <id> 
+        ( <expr> )  | <id>
 input:
         C
 Trying:
         A  | B  | C  | D
 ncnc!
 input:
-        A-A
+        A
 Trying:
         ( <expr> )  | <id>
 input:
-        A-A
+        A
 Trying:
         A  | B  | C  | D
-nice try ~ Undoing!
-nice try ~ Undoing!
-nice try ~ Undoing!
-nice try ~ Undoing!
-nice try ~ Undoing!
-A=B-C/A-A is INVAILD
+ncnc!
+input:
+        A
+Trying:
+        <term> * <factor>  | <term> / <factor>  | <factor>
+input:
+        A
+Trying:
+        ( <expr> )  | <id>
+input:
+        A
+Trying:
+        A  | B  | C  | D
+A=B-C/A-A is VAILD
 
 input:
         A=B*C/D-A
@@ -126,7 +138,7 @@ input:
         B*C/D
 Trying:
         A  | B  | C  | D
-nice try ~ Undoing!
+nice try ~ Undoing! 
 nice try ~ Undoing!
 input:
         B*C/D-A
@@ -185,7 +197,7 @@ Trying:
 input:
         B
 Trying:
-        <expr> - <term>  | <id>
+        <expr> - <term>  | <id> 
 input:
         B
 Trying:
@@ -241,7 +253,7 @@ input:
         A
 Trying:
         A  | B  | C  | D
-ncnc!
+ncnc! 
 input:
         B*(D-A)
 Trying:
@@ -264,3 +276,56 @@ nice try ~ Undoing!
 nice try ~ Undoing!
 nice try ~ Undoing!
 A=B*(D-A) is INVAILD
+
+input:
+        A=A-B-C
+Trying:
+        <id> = <expr>
+input:
+        A
+Trying:
+        A  | B  | C  | D
+ncnc!
+input:
+        A-B-C
+Trying:
+        <expr> - <term>  | <id>
+input:
+        A-B
+Trying:
+        <expr> - <term>  | <id>
+input:
+        A
+Trying:
+        <expr> - <term>  | <id> 
+input:
+        A
+Trying:
+        A  | B  | C  | D
+ncnc!
+input:
+        B
+Trying:
+        <term> * <factor>  | <term> / <factor>  | <factor>
+input:
+        B
+Trying:
+        ( <expr> )  | <id>
+input:
+        B
+Trying:
+        A  | B  | C  | D
+ncnc!
+input:
+        C
+Trying:
+        <term> * <factor>  | <term> / <factor>  | <factor>
+input:
+        C
+Trying:
+        ( <expr> )  | <id>
+input:
+        C
+Trying:
+        A  | B  | C  | D
+A=A-B-C is VAILD
