@@ -100,6 +100,19 @@ class BNF_statement {
     }
 
     bool match(vector<vector<Token>> alts, string input) {
+        if (DEBUG) {
+            cout << "input:\n\t" << input << endl
+                 << "Trying:\n\t";
+            for (int i = 0; i < alts.size(); i++) {
+                for (auto token : alts[i]) {
+                    cout << token.value << " ";
+                }
+                if (i != alts.size() - 1)
+                    cout << " | ";
+            }
+            cout << endl;
+        }
+
         vector<pair<string, string>> tokens;
         bool valid = false;
         sort(alts.begin(), alts.end(), [](const vector<Token>& a, const vector<Token>& b) {
@@ -124,9 +137,10 @@ class BNF_statement {
                     }
                     string left = remaining.substr(0, pos);
                     if (!left.empty()) {
-                        if (i - 1 >= 0 && alt[i - 1].type == TokenType::NonTerminal)
+                        if (i - 1 >= 0 && alt[i - 1].type == TokenType::NonTerminal && match(rules[alt[i - 1].value], left)) {
                             tokens.push_back({alt[i - 1].value, left});
-                        else {
+                            if (DEBUG) cout << "ncnc! " << endl;
+                        } else {
                             valid = false;
                             break;
                         }
@@ -136,31 +150,19 @@ class BNF_statement {
             }
             if (valid) {
                 if (!remaining.empty()) {
-                    if (alt.back().type == TokenType::NonTerminal)
+                    if (alt.back().type == TokenType::NonTerminal && match(rules[alt.back().value], remaining)) {
                         tokens.push_back({alt.back().value, remaining});
-                    else
+                    } else {
                         valid = false;
+                        if (DEBUG) cout << "nice try ~ Undoing! " << endl;
+                    }
                 }
                 break;
             }
         }
-        if (DEBUG) cout << "input:\n\t" << input << endl;
+
         if (!valid) return false;
 
-        // DEBUG
-        if (DEBUG) {
-            cout << "tokens: \n";
-            if (tokens.empty()) cout << "\t" << input << endl;
-            for (auto token : tokens) {
-                cout << "\t" << token.first << " " << token.second << endl;
-            }
-            cout << endl;
-        }
-
-        for (auto token : tokens) {
-            if (!match(rules[token.first], token.second))
-                return false;
-        }
         return true;
     }
 };
