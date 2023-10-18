@@ -115,15 +115,6 @@ class BNF_statement {
 
         vector<pair<string, string>> tokens;
         bool valid = false;
-        sort(alts.begin(), alts.end(), [](const vector<Token>& a, const vector<Token>& b) {
-            int count_a = 0, count_b = 0;
-            for (const Token& token : a)
-                if (token.type == TokenType::NonTerminal) count_a++;
-            for (const Token& token : b)
-                if (token.type == TokenType::NonTerminal) count_b++;
-            return count_a > count_b;
-        });
-
         for (const vector<Token>& alt : alts) {
             tokens.clear();
             string remaining = input;
