@@ -29,6 +29,8 @@ int main() {
     inputs.push_back("A=B-(C*A)");
     inputs.push_back("A=B*(D-A)");
 
+    inputs.push_back("A=A-B-C");
+
     for (auto input : inputs)
         cout << (bnf.is_valid(input) ? input + " is VAILD" : input + " is INVAILD") << endl
              << endl;

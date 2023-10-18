@@ -121,12 +121,12 @@ class BNF_statement {
             valid = true;
             for (int i = 0; i < alt.size(); i++) {
                 if (alt[i].type == TokenType::STRING) {
-                    size_t pos = remaining.find(alt[i].value);
-                    if (pos == string::npos) {  // 此規則不符合 下一位
+                    vector<size_t> positions = find_all(remaining, alt[i].value);
+                    if (positions.size() <= 0) {  // 此規則不符合 下一位
                         valid = false;
                         break;
                     }
-                    string left = remaining.substr(0, pos);
+                    string left = remaining.substr(0, positions.back());
                     if (!left.empty()) {
                         if (i - 1 >= 0 && alt[i - 1].type == TokenType::NonTerminal && match(rules[alt[i - 1].value], left)) {
                             tokens.push_back({alt[i - 1].value, left});
@@ -136,7 +136,7 @@ class BNF_statement {
                             break;
                         }
                     }
-                    remaining = remaining.substr(pos + alt[i].value.size());
+                    remaining = remaining.substr(positions.back() + alt[i].value.size());
                 }
             }
             if (valid) {
@@ -155,5 +155,22 @@ class BNF_statement {
         if (!valid) return false;
 
         return true;
+    }
+
+    vector<size_t> find_all(const string& input, const string& query) {
+        vector<size_t> positions;
+
+        size_t pos = 0;
+        while (true) {
+            pos = input.find(query, pos);
+            if (pos == string::npos) {
+                break;
+            }
+
+            positions.push_back(pos);
+            pos += query.size();
+        }
+
+        return positions;
     }
 };
