@@ -32,7 +32,7 @@ int main() {
     inputs.push_back("A=(A-B(D-C))");
 
     for (auto input : inputs)
-        cout << (bnf.is_valid(input) ? input + " is VAILD" : input + " is INVAILD") << endl
+        cout << (bnf.is_valid(input) ? input + " is VALID" : input + " is INVALID") << endl
              << endl;
     return 0;
 }
