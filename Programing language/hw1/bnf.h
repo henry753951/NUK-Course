@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <vector>
 
-#define DEBUG 1
+#define DEBUG 0
 
 using namespace std;
 enum class TokenType {
@@ -37,7 +37,7 @@ class BNF_statement {
         input.erase(remove_if(input.begin(), input.end(), ::isspace), input.end());
         this->input = input;
         size_t pos = 0;
-        return match(rules["<assign>"], input);
+        return TryEvetyAlt(rules["<assign>"], input);
     }
 
    private:
@@ -99,62 +99,90 @@ class BNF_statement {
         return tokens;
     }
 
-    bool match(vector<vector<Token>> alts, string input) {
+    string getAltString(const vector<Token>& alt) {
+        string result = "";
+        for (const Token& token : alt) {
+            if (token.type == TokenType::NonTerminal)
+                result.append(token.value);
+            else
+                result.append(token.value);
+        }
+        return result;
+    }
+
+    bool TryEvetyAlt(vector<vector<Token>> alts, string input) {
         if (DEBUG) {
-            cout << "input:\n\t" << input << endl
-                 << "Trying:\n\t";
-            for (int i = 0; i < alts.size(); i++) {
-                for (auto token : alts[i]) {
-                    cout << token.value << " ";
-                }
-                if (i != alts.size() - 1)
-                    cout << " | ";
-            }
-            cout << endl;
+            cout << "Trying:" << endl;
+            for (const vector<Token>& alt : alts)
+                cout << getAltString(alt) << endl;
         }
-
-        vector<pair<string, string>> tokens;
-        bool valid = false;
         for (const vector<Token>& alt : alts) {
-            tokens.clear();
-            string remaining = input;
-            valid = true;
-            for (int i = 0; i < alt.size(); i++) {
-                if (alt[i].type == TokenType::STRING) {
-                    vector<size_t> positions = find_all(remaining, alt[i].value);
-                    if (positions.size() <= 0) {  // 此規則不符合 下一位
-                        valid = false;
-                        break;
+            if (alt.size() == 1 && alt[0].type == TokenType::STRING) {
+                if (alt[0].value == input) {
+                    if (DEBUG) cout << "input: " << input << endl;
+                    if (DEBUG) cout << "Leave node Matched!" << endl;
+                    return true;
+                }
+                continue;
+            };
+            vector<pair<Token, string>> temp;
+            vector<vector<pair<Token, string>>> result = getAllPermutations(input, alt, 0, 0, temp);
+            if (result.size() == 0) {
+                if (DEBUG) cout << "input: " << input << endl;
+                if (DEBUG) cout << getAltString(alt) << " not Matched!" << endl;
+                continue;
+            }
+            if (DEBUG) cout << "input: " << input << endl;
+            if (DEBUG) cout << getAltString(alt) << " Matched!" << endl;
+            if (DEBUG) {
+                cout << endl;
+                cout << "result: " << endl;
+                for (const vector<pair<Token, string>>& r : result) {
+                    for (const pair<Token, string>& p : r) {
+                        cout << p.first.value << " " << p.second << endl;
                     }
-                    string left = remaining.substr(0, positions.back());
-                    if (!left.empty()) {
-                        if (i - 1 >= 0 && alt[i - 1].type == TokenType::NonTerminal && match(rules[alt[i - 1].value], left)) {
-                            tokens.push_back({alt[i - 1].value, left});
-                            if (DEBUG) cout << "ncnc! " << endl;
-                        } else {
-                            valid = false;
-                            break;
-                        }
-                    }
-                    remaining = remaining.substr(positions.back() + alt[i].value.size());
+                    cout << endl;
                 }
             }
-            if (valid) {
-                if (!remaining.empty()) {
-                    if (alt.back().type == TokenType::NonTerminal && match(rules[alt.back().value], remaining)) {
-                        tokens.push_back({alt.back().value, remaining});
-                    } else {
-                        valid = false;
-                        if (DEBUG) cout << "nice try ~ Undoing! " << endl;
-                    }
+
+            for (const vector<pair<Token, string>>& r : result) {
+                bool valid = true;
+                for (const pair<Token, string>& p : r) {
+                    if(!TryEvetyAlt(rules[p.first.value], p.second)) valid = false;
                 }
-                break;
+                if(valid) return true;
+            }
+        }
+        return false;
+    }
+
+    vector<vector<pair<Token, string>>> getAllPermutations(const string& input, const vector<Token>& format, int i, int j, vector<pair<Token, string>>& current) {
+        vector<vector<pair<Token, string>>> results;
+
+        if (i == input.size() && j == format.size()) {
+            results.push_back(current);
+            return results;
+        }
+        if (i >= input.size() || j >= format.size()) {
+            return results;
+        }
+
+        if (format[j].type == TokenType::NonTerminal) {
+            for (int k = i; k < input.size(); k++) {
+                vector<pair<Token, string>> new_current = current;
+                new_current.push_back(make_pair(format[j], input.substr(i, k - i + 1)));
+                auto new_results = getAllPermutations(input, format, k + 1, j + 1, new_current);
+                results.insert(results.end(), new_results.begin(), new_results.end());
+            }
+        } else {
+            int len = format[j].value.size();
+            if (input.substr(i, len) == format[j].value) {
+                auto new_results = getAllPermutations(input, format, i + len, j + 1, current);
+                results.insert(results.end(), new_results.begin(), new_results.end());
             }
         }
 
-        if (!valid) return false;
-
-        return true;
+        return results;
     }
 
     vector<size_t> find_all(const string& input, const string& query) {
