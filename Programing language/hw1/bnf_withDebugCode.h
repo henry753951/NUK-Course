@@ -5,6 +5,8 @@
 #include <unordered_map>
 #include <vector>
 
+#define DEBUG 0
+
 using namespace std;
 enum class TokenType {
     NonTerminal,
@@ -94,8 +96,12 @@ bool BNF_statement::parseRule(const string& rule_str) {
 
     stringstream ss(rhs);
     string token;
-    while (getline(ss, token, '|'))
+    while (getline(ss, token, '|')) {
+        if (DEBUG) cout << "-----" << token << "-----" << endl;
         rules[lhs].push_back(parseToken(token));
+        if (DEBUG) cout << endl;
+    }
+
     return true;
 }
 
@@ -127,20 +133,54 @@ vector<Token> BNF_statement::parseToken(const string& token_str) {
     }
     if (token.size() > 0)
         tokens.push_back({TokenType::STRING, token});
+
+    if (DEBUG)
+        for (Token& token : tokens) {
+            if (token.type == TokenType::NonTerminal)
+                cout << token.value << "\n";
+            else
+                cout << token.value << "\n";
+        }
     return tokens;
 }
 
 bool BNF_statement::Match(vector<vector<Token>> alts, string input) {
+    if (DEBUG) {
+        cout << "Trying:" << endl;
+        for (const vector<Token>& alt : alts)
+            cout << getAltString(alt) << endl;
+    }
     // 每個規則都要試試看 (ex: <expr> - <term> | <id> 等於兩個規則)
     for (const vector<Token>& alt : alts) {
         if (alt.size() == 1 && alt[0].type == TokenType::STRING) {
-            if (alt[0].value == input) return true;
+            if (alt[0].value == input) {
+                if (DEBUG) cout << "input: " << input << endl;
+                if (DEBUG) cout << "Leave node Matched!" << endl;
+                return true;
+            }
             continue;
         };
         vector<pair<Token, string>> temp;
         vector<vector<pair<Token, string>>> result = getAllPermutations(input, alt, 0, 0, temp);
         // 如果找不到符合規則的組合就跳過該格式化 (ex: <expr> - <term>，但是input是A+B，就不會有組合，反之 A-B-B 會有組合 -> A,B-B or A-B,B)
-        if (result.size() == 0) continue;
+        if (result.size() == 0) {
+            if (DEBUG) cout << "input: " << input << endl;
+            if (DEBUG) cout << getAltString(alt) << " not Matched!" << endl;
+            continue;
+        }
+        //
+        if (DEBUG) cout << "input: " << input << endl;
+        if (DEBUG) cout << getAltString(alt) << " Matched!" << endl;
+        if (DEBUG) {
+            cout << endl;
+            cout << "result: " << endl;
+            for (const vector<pair<Token, string>>& r : result) {
+                for (const pair<Token, string>& p : r) {
+                    cout << p.first.value << " " << p.second << endl;
+                }
+                cout << endl;
+            }
+        }
         // 每種組合都要試試看
         for (const vector<pair<Token, string>>& r : result) {
             bool valid = true;
