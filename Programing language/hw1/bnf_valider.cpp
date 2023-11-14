@@ -3,11 +3,7 @@
 // <expr> -> <expr> - <term> | <id>
 // <term> -> <term> * <factor> | <term>/<factor> | <factor>
 // <factor> -> (<expr>) | <id>
-
-#include <algorithm>
 #include <iostream>
-#include <string>
-#include <vector>
 
 #include "bnf.h"
 using namespace std;
@@ -15,6 +11,8 @@ using namespace std;
 int main() {
     vector<string> inputs;
     string BNF = "";
+
+    // 輸入規則
     BNF.append("<assign> -> <id>=<expr>\n");
     BNF.append("<id> -> A|B|C|D\n");
     BNF.append("<expr> -> <expr> - <term> | <id>\n");
@@ -23,6 +21,7 @@ int main() {
 
     BNF_statement bnf(BNF);
 
+    // 輸入測資
     inputs.push_back("A=B-C/A-A");
     inputs.push_back("A=B*C/D-A");
     inputs.push_back("A=B/(C-A)");
@@ -31,6 +30,7 @@ int main() {
     inputs.push_back("A=B-(C-A)");
     inputs.push_back("A=(A-B(D-C))");
 
+    // 輸出結果
     for (auto input : inputs)
         cout << (bnf.is_valid(input) ? input + " is VALID" : input + " is INVALID") << endl
              << endl;

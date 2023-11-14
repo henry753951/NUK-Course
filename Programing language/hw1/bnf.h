@@ -1,4 +1,5 @@
 
+#include <algorithm>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -167,7 +168,7 @@ vector<vector<pair<Token, string>>> BNF_statement::getAllPermutations(const stri
     if (i >= input.size() || j >= format.size()) {
         return results;
     }
-
+    // 如果是NonTerminal，就把所有可能的組合都找出來
     if (format[j].type == TokenType::NonTerminal) {
         for (int k = i; k < input.size(); k++) {
             vector<pair<Token, string>> new_current = current;
@@ -176,13 +177,13 @@ vector<vector<pair<Token, string>>> BNF_statement::getAllPermutations(const stri
             results.insert(results.end(), new_results.begin(), new_results.end());
         }
     } else {
+        // 如果是Terminal，就直接比對
         int len = format[j].value.size();
         if (input.substr(i, len) == format[j].value) {
             auto new_results = getAllPermutations(input, format, i + len, j + 1, current);
             results.insert(results.end(), new_results.begin(), new_results.end());
         }
     }
-
     return results;
 }
 
@@ -199,17 +200,13 @@ string BNF_statement::getAltString(const vector<Token>& alt) {
 
 vector<size_t> BNF_statement::find_all(const string& input, const string& query) {
     vector<size_t> positions;
-
     size_t pos = 0;
     while (true) {
         pos = input.find(query, pos);
-        if (pos == string::npos) {
-            break;
-        }
+        if (pos == string::npos) break;
 
         positions.push_back(pos);
         pos += query.size();
     }
-
     return positions;
 }
