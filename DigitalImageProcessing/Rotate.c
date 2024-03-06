@@ -19,7 +19,6 @@ typedef unsigned char U_CHAR;
 int ReadDataSize(char *name);
 void ReadImageData(char *name, U_CHAR *bmpfileheader, U_CHAR *bmpinfoheader, U_CHAR *color_table, U_CHAR *data);
 
-
 int main()
 {
    FILE *output_file = 0;
@@ -60,7 +59,7 @@ int main()
       k = i * biWidth4;
       for (j = 0; j < biWidth; j++)
       {
-         data2[k] = data1[(biHeight - j - 1) * biWidth + i];
+         data2[(biWidth4 - 1 - j) * biWidth4 + i] = data1[k];
          k = k + 1;
       }
    }

@@ -63,7 +63,7 @@ int isInside(int x1, int y1, int x2, int y2, int x3, int y3, int x, int y)
    int A1 = abs((x * (y2 - y3) + x2 * (y3 - y) + x3 * (y - y2)));
    int A2 = abs((x1 * (y - y3) + x * (y3 - y1) + x3 * (y1 - y)));
    int A3 = abs((x1 * (y2 - y) + x2 * (y - y1) + x * (y1 - y2)));
-   return (A == A1 + A2 + A3);
+   return (A == (A1 + A2 + A3));
 }
 
 int main()
@@ -100,7 +100,7 @@ int main()
    }
 
    // Process the file~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   int topX = 300, topY = 500, width = 400;
+   int topX = 500, topY = 1024 - 300, width = 400;
    int hight = (int)sqrt((double)(width * width - width * width / 4));
    printf("hight = %d\n", hight);
    // topX, topY
