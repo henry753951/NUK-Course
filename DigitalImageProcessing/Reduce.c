@@ -52,7 +52,9 @@ int main()
    {
       exit(0);
    }
-
+   int level;
+   printf("Level:");
+   scanf("%d", &level);
    // Process the file~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    biWidth4 = ((biWidth * 1 + 3) / 4 * 4);
    for (i = 0; i < biHeight; i++)
@@ -60,7 +62,7 @@ int main()
       k = i * biWidth4;
       for (j = 0; j < biWidth; j++)
       {
-         data2[k] = data1[k] / 128 * 255;
+         data2[k] = (data1[k] / (256/level) ) * 255/(level-1);
          k = k + 1;
       }
    }
