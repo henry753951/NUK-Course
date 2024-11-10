@@ -11,7 +11,7 @@
 2, 3, 2, 1
 ```
 
-### outputs/{SchedulerName}
+### outputs/{SchedulerName}/
 用 SchedulerName 分資料夾，txt 與 JSON 內容若為 `無法排程任務` 與 `[]` 則為無法排程，並且不會有圖片輸出。
 - **TXT** : 每一個clock的執行任務輸出
 - **JSON** : 包含 Dead 和 Arrival 時間點

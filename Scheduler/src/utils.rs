@@ -202,6 +202,7 @@ pub fn generate_gantt_chart(
                 }
             })
         )
+        .x_label_formatter(&(|x| format!("{}", x / 10)))
         .label_style(("sans-serif", 20))
         .axis_desc_style(("sans-serif", 24))
         .draw()?;
